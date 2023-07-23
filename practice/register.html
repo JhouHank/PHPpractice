@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>註冊帳號</title>
+  </head>
+  <body>
+    <form action="register.php" method="post">
+      <label for="account"> 帳號: </label>
+      <input type="text" id="account" name="account" onblur="checkAccount()" />
+      <span id="msg"></span><br />
+      <label for="password"> 密碼: </label>
+      <input type="password" id="password" name="password" /><br />
+      <label for="realname"> 真實姓名: </label>
+      <input type="text" id="realname" name="realname" /><br />
+      <input type="submit" value="註冊帳號" />
+      <input type="button" value="取消" onclick="gotologin()">
+    </form>
+    
+    <script>
+      let xhttp = new XMLHttpRequest(); //JavaScript內建的物件，用於進行 HTTP 或 HTTPS 通訊。
+      function checkAccount() {
+        console.log("debug"); //確認這個函式有被使用
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            //readyState為請求的狀態，狀態分為0到4，4代表已經接收到全部的回應資料，且請求已經完成。
+            //status為http的狀態碼，200代表請求已成功處理，並且伺服器回傳了所需的資料，404為Not Found。
+            document.getElementById("msg").innerHTML = xhttp.responseText;
+            //把regisCheck回傳的資料顯示在畫面上
+          }
+        };
+        let account = document.getElementById("account").value;
+        xhttp.open("GET", `checkRegis.php?account=${account}`, true);
+        //用GET方法傳送
+        //網址(傳送的目的地)，因為是用get，所以要加上?account=${account}，把account的值帶過去
+        //true代表以"非同步"的方式執行，在請求發送後繼續執行程式碼，
+        //不需要等待伺服器回應即可進行其他操作的場景
+        xhttp.send();
+        //根據前面的open設定的狀況，來發送請求
+      }
+      function gotologin(){
+        window.location.href = "http://localhost/PHP/login.html";
+      }
+    </script>
+  </body>
+</html>
